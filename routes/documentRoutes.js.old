@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const documentController = require('../controllers/documentController.js.old');
+
+router.get('/', documentController.getDocuments);
+
+router.get('/:id', documentController.telechargerPDF);
+
+router.post('/', documentController.genererPDF);
+
+module.exports = router;

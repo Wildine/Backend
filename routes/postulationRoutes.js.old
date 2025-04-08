@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const postulationController = require('../controllers/postulationController.js.old');
+
+// Route pour postuler
+router.get('/', postulationController.getAllPostulations);
+router.get('/:userId/statut', postulationController.getStatut);
+router.post('/', postulationController.postuler);
+router.put('/:postulationId', postulationController.updatePostStatus);
+
+module.exports = router;

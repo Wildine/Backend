@@ -1,0 +1,63 @@
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
+const path = require('path');
+const { Document } = require('../models');
+
+// Generer un PDF et l'enregistrer
+exports.genererPDF = async (req, res) => {
+    const { titre, contenu, type } = req.body;
+
+    try {
+        // Nom du fichier
+        const fileName = `${Date.now()}-${titre.replace(/\s+/g, '_')}.pdf`;
+        const filePath = path.join(__dirname, `../uploads/${fileName}`);
+
+        // Generation du PDF
+        const doc = new PDFDocument();
+        const stream = fs.createWriteStream(filePath);
+        doc.pipe(stream);
+        doc.fontSize(20).text(titre, { align: 'center' }).moveDown();
+        doc.fontSize(14).text(contenu, { align: 'left' }).moveDown();
+        doc.end();
+
+        // Attendre la fin de l'ecriture du fichier
+        stream.on('finish', async () => {
+            const document = await Document.create({ titre, fichier: fileName, type });
+            res.status(201).json({ message: "PDF genere avec succès", document });
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors de la generation du PDF" });
+    }
+};
+
+// Telecharger un PDF
+exports.telechargerPDF = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const document = await Document.findByPk(id);
+        if (!document) {
+            return res.status(404).json({ message: "Document non trouve" });
+        }
+
+        const filePath = path.join(__dirname, `../uploads/${document.fichier}`);
+        res.download(filePath, document.fichier);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors du telechargement" });
+    }
+};
+
+// Recuperer la liste des documents
+exports.getDocuments = async (req, res) => {
+    try {
+        const documents = await Document.findAll();
+        res.status(200).json(documents);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors de la recuperation des documents" });
+    }
+};

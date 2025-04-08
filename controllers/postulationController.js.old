@@ -1,0 +1,121 @@
+const { Op } = require("sequelize");
+const { Postulation, User, Entreprise } = require('../models');
+
+exports.getAllPostulations = async (req, res) => {
+    try {
+        const postulation = await Postulation.findAll();
+        res.json(postulation);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la recuperation des utilisateurs.", error });
+    }
+};
+
+exports.postuler = async (req, res) => {
+    const { userId, entrepriseId, statut, date_postulation } = req.body;
+
+    try {
+        // Verifier si l'utilisateur existe
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouve' });
+        }
+
+        // Verifier si l'entreprise existe
+        const entreprise = await Entreprise.findByPk(entrepriseId);
+        if (!entreprise) {
+            return res.status(404).json({ message: 'Entreprise non trouvee' });
+        }
+
+        // Verifier si l'utilisateur a dejà postule pour cette entreprise
+        const existingPostulation = await Postulation.findOne({ where: { user_id: userId, entreprise_id: entrepriseId } });
+        if (existingPostulation) {
+            return res.status(400).json({ message: 'Vous avez dejà postule pour cette entreprise' });
+        }
+
+        // Creer la postulation
+        const postulation = await Postulation.create({ 
+            user_id: userId, 
+            entreprise_id: entrepriseId, 
+            statut: statut || 'en attente', // Par defaut 'en attente' si aucun statut fourni
+            date_postulation: date_postulation || new Date() // Si aucune date donnee, prend la date actuelle
+        });
+
+        res.status(201).json({ message: 'Postulation envoyee avec succes', postulation });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de la postulation' });
+    }
+};
+
+
+exports.updatePostStatus = async (req, res) => {
+    const { postulationId } = req.params;
+    const { statut } = req.body;
+
+    try {
+        // Recuperer la postulation concernee
+        const postulation = await Postulation.findByPk(postulationId);
+        if (!postulation) {
+            return res.status(404).json({ message: "Postulation non trouvee." });
+        }
+
+        // Verifier si l'entreprise a dejà accepte une postulation de cet utilisateur
+        if (statut === "accepte") {
+            await Postulation.update(
+                { statut: "rejete" }, 
+                {
+                    where: {
+                        user_id: postulation.user_id,
+                        entreprise_id: postulation.entreprise_id, 
+                        id: { [Op.ne]: postulationId } // Exclure la postulation actuelle
+                    }
+                }
+            );
+        }
+
+        // Mettre à jour la postulation selectionnee
+        await postulation.update({ statut });
+
+        res.json({ message: "Statut mis à jour avec succes." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur serveur." });
+    }
+};
+
+// Recuperer le statut d'une postulation
+exports.getStatut = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const postulation = await Postulation.findOne();
+
+        if (!postulation) {
+            return res.status(404).json({ message: 'Aucune postulation trouvee' });
+        }
+
+        res.status(200).json({ statut: postulation.statut });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de la recuperation du statut' });
+    }
+};
+
+
+// Recuperer le statut d'une postulation avec l'id
+exports.getStatut = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const postulation = await Postulation.findOne({ where: { user_id: userId } });
+
+        if (!postulation) {
+            return res.status(404).json({ message: 'Aucune postulation trouvee' });
+        }
+
+        res.status(200).json({ statut: postulation.statut });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de la recuperation du statut' });
+    }
+};

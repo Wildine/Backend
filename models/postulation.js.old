@@ -1,0 +1,38 @@
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const User = require('./user');
+const Entreprise = require('./entreprise');
+
+const Postulation = sequelize.define('Postulation', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  
+  statut: {
+    type: DataTypes.ENUM('en_attente', 'accepte', 'rejete'),
+    defaultValue: 'en_attente',
+    allowNull: false,
+  },
+
+  date_postulation: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+},
+{
+  tableName: 'postulations',
+  timestamps: true
+});
+
+// Postulation.belongsTo(User, { foreignKey: 'user_id' });
+
+// Postulation.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+// Postulation.belongsTo(Entreprise, { foreignKey: 'entreprise_id', onDelete: 'CASCADE' });
+
+// User.hasMany(Postulation, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+// Entreprise.hasMany(Postulation, { foreignKey: 'entreprise_id', onDelete: 'CASCADE' });
+
+
+module.exports = Postulation;
