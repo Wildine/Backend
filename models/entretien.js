@@ -13,6 +13,26 @@ const Entretien = sequelize.define('Entretien', {
         allowNull: false
     },
 
+    heure_entretien: {
+        type: DataTypes.TIME,
+        allowNull: false
+    },
+
+    mode: {
+        type: DataTypes.ENUM('presentiel', 'visio', 'telephone'),
+        allowNull: false
+    },
+
+    lien_ou_lieu: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    message: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+
     statut: {
         type: DataTypes.ENUM('prevu', 'realise', 'annule'),
         allowNull: false,
@@ -27,7 +47,7 @@ const Entretien = sequelize.define('Entretien', {
             key: 'id'
         }
     }
-}, 
+},
 {
     tableName: 'entretiens',
     timestamps: true

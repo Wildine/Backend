@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
 const Candidature = sequelize.define('Candidature', {
-    id: { 
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -29,13 +29,13 @@ const Candidature = sequelize.define('Candidature', {
     statut: {
         type: DataTypes.ENUM('en_attente', 'accepte', 'rejete'),
         defaultValue: 'en_attente'
-    },      
+    },
 
     date_candidature: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
     }
-}, 
+},
 {
     tableName: 'candidatures',
     timestamps: true,

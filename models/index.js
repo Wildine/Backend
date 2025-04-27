@@ -11,6 +11,7 @@ const Document = require('./document');
 
 
 Etudiant.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+User.hasOne(Etudiant, { foreignKey: 'user_id' });
 
 Entreprise.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 User.hasOne(Entreprise, { foreignKey: 'user_id' });
@@ -21,7 +22,7 @@ User.hasOne(Encadrant, { foreignKey: 'user_id' });
 DemandeEmploi.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 User.hasOne(DemandeEmploi, { foreignKey: 'user_id' });
 
-// // Relation entre Entreprise et Offre
+// Relation entre Entreprise et Offre
 Entreprise.hasMany(Offre, { foreignKey: 'entreprise_id', onDelete: 'CASCADE' });
 Offre.belongsTo(Entreprise, { foreignKey: 'entreprise_id' });
 
@@ -42,5 +43,14 @@ Evaluation.belongsTo(User, { as: 'stagiaire', foreignKey: 'stagiaire_id' });
 User.hasMany(Evaluation, { foreignKey: 'encadrant_id' });
 Evaluation.belongsTo(User, { as: 'encadrant', foreignKey: 'encadrant_id' });
 
+// User.belongsTo(Entreprise, { foreignKey: 'entrepriseId' });
+// Entreprise.hasMany(User, { foreignKey: 'entrepriseId' });
+Encadrant.belongsTo(Entreprise, { foreignKey: 'entrepriseId' });
+Entreprise.hasMany(Encadrant, { foreignKey: 'entrepriseId' });
 
-module.exports = { User, Etudiant, Entreprise, Encadrant, DemandeEmploi, Candidature, Offre, Entreprise, Entretien, Evaluation, Document };
+Candidature.belongsTo(Etudiant, { foreignKey: 'etudiant_id' });
+Etudiant.hasMany(Candidature, { foreignKey: 'etudiant_id' });
+
+
+// module.exports = { User, Etudiant, Entreprise, Encadrant, DemandeEmploi, Candidature, Offre, Entreprise, Entretien, Evaluation, Document };
+module.exports = { User, Etudiant, Entreprise, Encadrant, DemandeEmploi, Candidature, Offre, Entretien, Evaluation, Document };

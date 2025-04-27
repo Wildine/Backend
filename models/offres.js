@@ -44,8 +44,18 @@ const Offre = sequelize.define('Offre', {
             model: 'entreprises',
             key: 'id'
         }
+    },
+
+    lieu: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    duree: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
-}, 
+},
 {
     tableName: 'offres',
     timestamps: true

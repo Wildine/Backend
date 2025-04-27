@@ -20,10 +20,9 @@ const User = sequelize.define('User', {
     },
 
     role: {
-        type: DataTypes.ENUM('etudiant', 'entreprise', 'encadrant', 'demandeur_emploi'),
+        type: DataTypes.ENUM('etudiant', 'entreprise', 'encadrant', 'demande_emploi'),
         allowNull: false
     },
-    
 },
 {
     tableName: 'users',

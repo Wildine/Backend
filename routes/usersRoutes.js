@@ -4,12 +4,17 @@ const userController = require('../controllers/userController');
 const { verifyToken } = require('../middleware/authMiddleware');
 const { isAdmin, isEntreprise, isEtudiant, isEncadrant, isDemandeEmploi } = require('../middleware/roleMiddleware');
 
-router.get('/', verifyToken, userController.getAllUsers);
+// router.get('/', verifyToken, userController.getAllUsers);
 
 // router.get('/', verifyToken, isAdmin, userController.getAllUsers);
 
+router.get('/entreprises', userController.getAllEntreprises);
+
 // Route pour récupérer le statut d'un utilisateur (pas de sécurité ici)
 router.get('/:userId', verifyToken, isEtudiant, userController.getStatut);
+
+// Route pour récupérer l'utilisateur connecté (avec token)
+// router.get('/user-connected', verifyToken, userController.getUserConnected);
 
 // router.get('/:userId/statut', verifyToken, isEtudiant, userController.getStatut);
 
@@ -22,7 +27,7 @@ router.delete('/:userId', verifyToken, userController.deleteUser);
 // router.delete('/:userId', verifyToken, isAdmin, userController.deleteUser);
 
 // Route pour postuler (pas de sécurité ici, mais à ajouter si nécessaire)
-router.post('/postuler', userController.postuler);
+// router.post('/postuler', userController.postuler);
 
 // Route pour récupérer le statut d'une postulation (pas de sécurité ici, mais à ajouter si nécessaire)
 router.get('/profile', verifyToken, (req, res) => {

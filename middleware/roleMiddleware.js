@@ -1,8 +1,17 @@
 const jwt = require('jsonwebtoken');
 
+// exports.isEtudiant = (req, res, next) => {
+//     console.log(req.user); // Pour vérifier si req.user contient bien un rôle
+//     if (req.user.role !== 'etudiant') {
+//         return res.status(403).json({ message: "Acces reserve aux etudiants." });
+//     }
+//     next();
+// };
+
 exports.isEtudiant = (req, res, next) => {
-    if (req.user.role !== 'etudiant') {
-        return res.status(403).json({ message: "Acces reserve aux etudiants." });
+    console.log('Utilisateur reçu pour vérification:', req.user);
+    if (!req.user || req.user.role !== 'etudiant') {
+        return res.status(403).json({ message: "Accès réservé aux étudiants." });
     }
     next();
 };

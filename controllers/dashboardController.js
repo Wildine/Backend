@@ -40,6 +40,15 @@ exports.getDashboard = async (req, res) => {
                         }
                     }
                 }),
+                total_candidatures_acceptees: await Candidature.count({
+                    where: { statut: 'accepte' },
+                    include: { model: Offre, where: { entreprise_id: userId } }
+                }),
+                total_candidatures_rejetees: await Candidature.count({
+                    where: { statut: 'rejete' },
+                    include: { model: Offre, where: { entreprise_id: userId } }
+                }),
+                
             };
         } else if (user.role === 'encadrant') {
             data = {

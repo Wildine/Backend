@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "192.168.1.32:3000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -40,6 +40,12 @@
                   "example": "any"
                 },
                 "nom_entreprise": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "secteur": {
                   "example": "any"
                 }
               }
@@ -92,25 +98,12 @@
         }
       }
     },
-    "/api/users/": {
+    "/api/users/entreprises": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
@@ -219,39 +212,6 @@
         }
       }
     },
-    "/api/users/postuler": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/api/users/profile": {
       "get": {
         "description": "",
@@ -280,20 +240,14 @@
         "description": "",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
+            "name": "entrepriseId",
+            "in": "query",
             "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
@@ -328,6 +282,12 @@
                 },
                 "type_offre": {
                   "example": "any"
+                },
+                "lieu": {
+                  "example": "any"
+                },
+                "duree": {
+                  "example": "any"
                 }
               }
             }
@@ -361,22 +321,11 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"
@@ -446,6 +395,47 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/offres/offres": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/offres/entreprise/{entrepriseId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "500": {
             "description": "Internal Server Error"
@@ -569,9 +559,17 @@
         }
       }
     },
-    "/api/candidatures/": {
+    "/api/candidatures/{offreId}": {
       "get": {
         "description": "",
+        "parameters": [
+          {
+            "name": "offreId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -644,6 +642,120 @@
         }
       }
     },
+    "/api/candidatures/entreprise/{entrepriseId}/candidatures": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/candidatures/entreprise/{entrepriseId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/candidatures/entreprise/encadrants": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/candidatures/acceptees/{entrepriseId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/candidatures/rejetes/{entrepriseId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "entrepriseId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/candidatures/postuler": {
       "post": {
         "description": "",
@@ -692,6 +804,43 @@
       }
     },
     "/api/candidatures/{candidatureId}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statut": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "description": "",
         "parameters": [
@@ -770,6 +919,15 @@
                 },
                 "candidature_id": {
                   "example": "any"
+                },
+                "heure_entretien": {
+                  "example": "any"
+                },
+                "mode": {
+                  "example": "any"
+                },
+                "lien_ou_lieu": {
+                  "example": "any"
                 }
               }
             }
@@ -778,6 +936,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -803,22 +964,11 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"

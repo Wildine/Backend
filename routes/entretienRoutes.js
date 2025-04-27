@@ -6,11 +6,14 @@ const { isEntreprise, isEncadrant } = require('../middleware/roleMiddleware');
 
 router.get('/', verifyToken, isEntreprise, entretienController.getAllEntretiens);
 
-router.get('/:id', verifyToken, isEncadrant, entretienController.getEntretienById);
+router.get('/:id', entretienController.getEntretienById);
+// router.get('/:id', verifyToken, isEncadrant, entretienController.getEntretienById);
 
 router.get('/candidature/:candidatureId', verifyToken, isEncadrant, entretienController.getEntretiensByCandidature);
+// router.get('/candidature/:candidatureId', verifyToken, isEncadrant, entretienController.getEntretiensByCandidature);
 
-router.post('/', verifyToken, isEntreprise, entretienController.createEntretien);
+router.post('/', entretienController.createEntretien);
+// router.post('/', verifyToken, isEntreprise, entretienController.createEntretien);
 
 router.put('/:id', verifyToken, isEntreprise, entretienController.updateEntretien);
 

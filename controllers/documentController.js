@@ -5,7 +5,7 @@ const { Document, Etudiant } = require('../models');
 // Fonction pour générer un document
 exports.generateDocument = async (req, res) => {
     const { userId, type } = req.body;
-    
+
     try {
         // Recherche de l'étudiant en fonction du userId
         const etudiant = await Etudiant.findOne({ where: { id: userId } });
@@ -87,7 +87,7 @@ exports.downloadDocument = async (req, res) => {
             return res.status(404).json({ message: 'Document non trouvé' });
         }
 
-        res.download(document.fichier); // Télécharger le fichier du serveur
+        res.download(document.fichier);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erreur lors du téléchargement du document' });

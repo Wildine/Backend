@@ -4,14 +4,15 @@ const sequelize = require('./config/db');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const localhost = '127.0.0.1';
+const localhost = '192.168.1.32';
+// const localhost = 'localhost';
 const port = 3000;
 
 require('dotenv').config();
 
 const authMiddleware = require('./middleware/authMiddleware');
 
-// Importation des differents routes 
+// Importation des differents routes
 const authRoutes = require('./routes/authRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const offresRoutes = require('./routes/offresRoutes');
@@ -25,9 +26,9 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const statistiqueRoutes = require('./routes/statistiqueRoutes');
 
 
-// Importation de swagger pour la documentation 
-const swaggerUi = require('swagger-ui-express'); 
-const swaggerDocument = require('./swagger-output.json'); 
+// Importation de swagger pour la documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
 
 const app = express();
 
@@ -38,7 +39,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/offres', offresRoutes);
 app.use('/api/dashboard', dashboardRoutes)
-// app.use('/api/postulations', postulationRoutes);
 app.use('/api/candidatures', candidatureRoutes);
 app.use('/api/entretiens', entretienRoutes);
 app.use('/api/evaluations', evaluationRoutes);
